@@ -72,6 +72,11 @@ def login_request(request):
 
                 def connected(client):
                     print("Connection established successfully.")
+                    if user.username not in adafruitData:
+                        adafruitData[user.username] = {
+                            'emotionData': [],
+                            'waterData': [],
+                        }
                     for feed in AIO_FEED_IDS:
                         client.subscribe(feed)
 
@@ -83,11 +88,11 @@ def login_request(request):
                     sys.exit(1)
 
                 def message(client, feed_id, payload):
-                    global adafruitData
+                    global adafruitData                        
                     if feed_id == 'emotion-' + user.username:
-                        adafruitData['emotionData'].append(float(payload))
+                        adafruitData[user.username]['emotionData'].append(float(payload))
                     elif feed_id == 'water-' + user.username:
-                        adafruitData['waterData'].append(float(payload))
+                        adafruitData[user.username]['waterData'].append(float(payload))
 
                 client[0] = MQTTClient(AIO_USERNAME, AIO_KEY)
                 client[0].on_connect = connected

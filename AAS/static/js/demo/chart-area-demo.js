@@ -128,9 +128,9 @@ var myLineChart = new Chart(ctx, {
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
           if (datasetLabel == 'Emotion') {
-            return datasetLabel + ': ' + tooltipItem.yLabel * maxEmo;
+            return datasetLabel + ': ' + (tooltipItem.yLabel * maxEmo).toFixed(2);
           }
-          return datasetLabel + ': ' + tooltipItem.yLabel * maxWater + 'l';
+          return datasetLabel + ': ' + (tooltipItem.yLabel * maxWater).toFixed(2) + 'l';
         }
       }
     }

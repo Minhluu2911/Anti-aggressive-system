@@ -7,7 +7,7 @@ import calendar
 
 from .models import EmotionData
 
-from .apps import adafruitData, speed, client, maxEmo, maxWater
+from .apps import adafruitData, client, maxEmo, maxWater
 
 
 def toMinuteData(data, func): # 1 update / 10 secs
@@ -26,11 +26,11 @@ def mystat(request):
 		'username': request.user.username,
 		'maxEmo': maxEmo,
 		'maxWater': maxWater,
-		'overallScore': EmotionData.objects.filter(user=request.user)[0].current_score,
-		'avgEmo': round(maxEmo * (lambda xs : sum(xs) / len(xs) if xs else 1)(adafruitData['emotionData']), 2),
-		'sumWater': round(maxWater * (lambda xs : sum(xs))(adafruitData['waterData']), 2),
-		'emotion': str(toMinuteData(adafruitData['emotionData'], lambda xs : sum(xs) / len(xs))),
-		'water': str(toMinuteData(adafruitData['waterData'], lambda xs : sum(xs))),
+		'overallScore': (lambda xs : xs[0].current_score if xs else 100)(EmotionData.objects.filter(user=request.user)),
+		'avgEmo': round(maxEmo * (lambda xs : sum(xs) / len(xs) if xs else 1)(adafruitData[request.user.username]['emotionData']), 2),
+		'sumWater': round(maxWater * (lambda xs : sum(xs))(adafruitData[request.user.username]['waterData']), 2),
+		'emotion': str(toMinuteData(adafruitData[request.user.username]['emotionData'], lambda xs : sum(xs) / len(xs))),
+		'water': str(toMinuteData(adafruitData[request.user.username]['waterData'], lambda xs : sum(xs))),
 		})
 
 def export_data(request):
@@ -38,12 +38,12 @@ def export_data(request):
 	if not emotionDataSet:
 		emotionData = EmotionData(
 			user=request.user,
-			current_score=maxEmo * (lambda xs : sum(xs) / len(xs) if xs else 1)(adafruitData['emotionData']),
+			current_score=maxEmo * (lambda xs : sum(xs) / len(xs) if xs else 1)(adafruitData[request.user.username]['emotionData']),
 			number_of_days=1,
 			)
 	else:
 		emotionData = emotionDataSet[0]
-		emotionData.current_score = (emotionData.current_score * emotionData.number_of_days + maxEmo * (lambda xs : sum(xs) / len(xs) if xs else 1)(adafruitData['emotionData'])) / (emotionData.number_of_days + 1)
+		emotionData.current_score = (emotionData.current_score * emotionData.number_of_days + maxEmo * (lambda xs : sum(xs) / len(xs) if xs else 1)(adafruitData[request.user.username]['emotionData'])) / (emotionData.number_of_days + 1)
 		emotionData.number_of_days += 1
 
 	emotionData.save()

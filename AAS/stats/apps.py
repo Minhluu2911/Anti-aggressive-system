@@ -1,13 +1,9 @@
 from django.apps import AppConfig
 
 
-adafruitData = {
-    'emotionData': [],
-    'waterData': [],
-}
+adafruitData = {}
 maxEmo = 100
 maxWater = 4
-speed = [0]
 client = [None]
 
 class StatsConfig(AppConfig):
