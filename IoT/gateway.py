@@ -9,10 +9,6 @@ cwLock = threading.Lock()
 
 AIO_FEED_IDS = ["emotion"]
 
-#AIO_USERNAME = "vynguyen5689"
-#AIO_KEY = "aio_obRq55YDvNiHc1kAw8dvKgEU72nC"
-
-
 AIO_USERNAME = "nghianguyen1"
 AIO_KEY = "aio_IbfZ71bWihZqIeK0BYOdt9ZXxZnO"
 
