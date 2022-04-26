@@ -34,7 +34,7 @@ def  disconnected(client):
 
 def  message(client, feed_id, payload):
     if isMicrobitConnected:
-        if feed_id == "emotion" and payload == "0":
+        if feed_id == "emotion-a@a" and payload == "0":
             ser.write(("1#").encode())
             with cwLock:
                 currentWater[0] += 500
@@ -74,12 +74,10 @@ def processData(data):
     splitData = data.split(":")
     try:
         if splitData[0] == "BUTTON":
-            client.publish("button", splitData[1])
             if splitData[1] == "0":
                 with cwLock:
                     currentWater[0] += 500
         elif splitData[0] == "TEMP":
-            client.publish("temp", splitData[1])
             if splitData[1] >= "20":
                 ser.write(("2#").encode())
     except:
@@ -102,7 +100,7 @@ def readSerial():
 def sendWaterData(currentWater):
     while True:
         time.sleep(10)
-        client.publish("water", currentWater[0])
+        client.publish("water-a@a", currentWater[0])
         with cwLock:
             currentWater[0] = 0
 
