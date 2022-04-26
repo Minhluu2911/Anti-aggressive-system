@@ -37,7 +37,7 @@
                 <div class="sidebar-brand-icon">
                     <i class="fas fa-theater-masks"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Name</div>
+                <div class="sidebar-brand-text mx-3">AAS</div>
             </a>
 
             <!-- Divider -->
@@ -352,7 +352,7 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">My Statistics 2022</h1>
+                        <h1 class="h3 mb-0 text-gray-800">My Statistics {{ today.year }}</h1>
                         <a href="{% url 'stats:export_data' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                     </div>
@@ -372,7 +372,7 @@
                                                 <button class="btn btn-primary dropdown-toggle col-xl-11" type="button"
                                                     id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                                     aria-expanded="false">
-                                                    March
+                                                    {{ today.month|month_name }}
                                                 </button>
                                                 <div class="dropdown-menu animated--fade-in"
                                                     aria-labelledby="dropdownMenuButton">
@@ -402,7 +402,7 @@
                                                 <button class="btn btn-success dropdown-toggle col-xl-11" type="button"
                                                     id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                                     aria-expanded="false">
-                                                    8<sup>th</sup>
+                                                    {{ today.day }}<sup>th</sup>
                                                 </button>
                                                 <div class="dropdown-menu animated--fade-in"
                                                     aria-labelledby="dropdownMenuButton">
@@ -430,7 +430,7 @@
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">83</div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ overallScore }}</div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="progress progress-sm mr-2">

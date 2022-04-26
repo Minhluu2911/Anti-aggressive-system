@@ -17,6 +17,12 @@ from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.db.models.query_utils import Q
 
+from stats.apps import client, adafruitData
+import sys
+import os
+
+from Adafruit_IO import MQTTClient
+
 # Create your views here.
 def register(response):
     return render(response, "register/register.html")
@@ -48,21 +54,6 @@ def register_request(request):
     return render(request, template_name="register/register.html")
 
 def login_request(request):
-    # if request.method == "POST":
-    #     form  = LoginForm(request.POST)
-    #     if form.is_valid():
-    #         username = form.cleaned_data.get('username')
-    #         password = form.cleaned_data.get('password')
-    #         user = authenticate(username=username, password=password)
-    #         if user is not None:
-    #             if user.is_admin:
-    #                 login(request,user)
-    #                 return redirect('/register/homepage_admin')
-    #             else:
-    #                 login(request,user)
-    #                 return redirect('/register/homepage_user')
-    # form = LoginForm()
-    # return render(request, template_name="register/login.html", context={"form":form})
     if request.method == "POST":
         username = request.POST.get("Email")
         password = request.POST.get("Password")
@@ -73,6 +64,39 @@ def login_request(request):
                 return redirect(reverse('homepage:home_admin'))
             else:
                 login(request,user)
+
+                global client
+                AIO_FEED_IDS = ['emotion-' + user.username, 'water-' + user.username]
+                AIO_USERNAME = os.environ['AIO_USERNAME']
+                AIO_KEY = os.environ['AIO_KEY']
+
+                def connected(client):
+                    print("Connection established successfully.")
+                    for feed in AIO_FEED_IDS:
+                        client.subscribe(feed)
+
+                def subscribe(client, userdata, mid, granted_qos):
+                    print("Subscribed.")
+
+                def disconnected(client):
+                    print("Disconnected.")
+                    sys.exit(1)
+
+                def message(client, feed_id, payload):
+                    global adafruitData
+                    if feed_id == 'emotion-' + user.username:
+                        adafruitData['emotionData'].append(float(payload))
+                    elif feed_id == 'water-' + user.username:
+                        adafruitData['waterData'].append(float(payload))
+
+                client[0] = MQTTClient(AIO_USERNAME, AIO_KEY)
+                client[0].on_connect = connected
+                client[0].on_disconnect = disconnected
+                client[0].on_message = message
+                client[0].on_subscribe = subscribe
+                client[0].connect()
+                client[0].loop_background()
+
                 return redirect(reverse('homepage:home'))
         messages.error(request, "The email or password is not correct.")
     return render(request, template_name="register/login.html")
