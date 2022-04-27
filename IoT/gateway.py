@@ -9,8 +9,12 @@ cwLock = threading.Lock()
 
 AIO_FEED_IDS = ["emotion-a@a"]
 
+#AIO_USERNAME = "vynguyen5689"
+#AIO_KEY = "aio_obRq55YDvNiHc1kAw8dvKgEU72nC"
+
+
 AIO_USERNAME = "nghianguyen1"
-AIO_KEY = "aio_IbfZ71bWihZqIeK0BYOdt9ZXxZnO"
+AIO_KEY = "aio_rscI49ZrPqkwIS8nkZpo4KplSn32"
 
 
 def  connected(client):
@@ -31,6 +35,7 @@ def  disconnected(client):
 def  message(client, feed_id, payload):
     if isMicrobitConnected:
         if feed_id == "emotion-a@a" and payload == "0":
+            print("Negative feelings detected!")
             ser.write(("1#").encode())
             with cwLock:
                 currentWater[0] += 500
@@ -68,6 +73,7 @@ def processData(data):
     data = data.replace("!", "")
     data = data.replace("#", "")
     splitData = data.split(":")
+    print(splitData)
     try:
         if splitData[0] == "BUTTON":
             if splitData[1] == "0":
