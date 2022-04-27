@@ -7,7 +7,7 @@ from Adafruit_IO import MQTTClient
 currentWater = [0]
 cwLock = threading.Lock()
 
-AIO_FEED_IDS = ["emotion"]
+AIO_FEED_IDS = ["emotion-a@a"]
 
 AIO_USERNAME = "nghianguyen1"
 AIO_KEY = "aio_IbfZ71bWihZqIeK0BYOdt9ZXxZnO"
